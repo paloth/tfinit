@@ -22,9 +22,15 @@ THE SOFTWARE.
 package cmd
 
 import (
-	"fmt"
+	"log"
+	"os"
 
 	"github.com/spf13/cobra"
+)
+
+var (
+	projectName string
+	path        string
 )
 
 // infraCmd represents the infra command
@@ -32,20 +38,26 @@ var infraCmd = &cobra.Command{
 	Use:   "infra",
 	Short: "Generate a new Terraform project to deploy an Infrastructure from scratch",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("infra called")
+		fileToCreate()
 	},
 }
 
 func init() {
+
 	rootCmd.AddCommand(infraCmd)
+	infraCmd.Flags().StringVarP(&projectName, "name", "n", "", "Name of the project to create")
 
-	// Here you will define your flags and configuration settings.
+}
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// infraCmd.PersistentFlags().String("foo", "", "A help for foo")
+func fileToCreate() {
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// infraCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	var files = [5]string{"provider", "main", "variables", "outputs", "datasources"}
+
+	for _, file := range files {
+		_, err := os.OpenFile(file+".tf", os.O_CREATE, 0644)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
 }
