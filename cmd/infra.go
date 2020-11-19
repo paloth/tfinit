@@ -22,15 +22,8 @@ THE SOFTWARE.
 package cmd
 
 import (
-	"log"
-	"os"
-
+	"github.com/paloth/tfinit/internal/files"
 	"github.com/spf13/cobra"
-)
-
-var (
-	projectName string
-	path        string
 )
 
 // infraCmd represents the infra command
@@ -38,26 +31,11 @@ var infraCmd = &cobra.Command{
 	Use:   "infra",
 	Short: "Generate a new Terraform project to deploy an Infrastructure from scratch",
 	Run: func(cmd *cobra.Command, args []string) {
-		fileToCreate()
+		var infra bool = true
+		files.ToCreate(infra)
 	},
 }
 
 func init() {
-
 	rootCmd.AddCommand(infraCmd)
-	infraCmd.Flags().StringVarP(&projectName, "name", "n", "", "Name of the project to create")
-
-}
-
-func fileToCreate() {
-
-	var files = [5]string{"provider", "main", "variables", "outputs", "datasources"}
-
-	for _, file := range files {
-		_, err := os.OpenFile(file+".tf", os.O_CREATE, 0644)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-
 }
